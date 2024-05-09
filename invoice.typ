@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2024 Philipp Klein <philipptheklein@gmail.com>
 // SPDX-FileCopyrightText: 2023 Kerstin Humm <kerstin@erictapen.name>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -14,21 +15,27 @@
 )
 
 // Typst can't format numbers yet, so we use this from here:
-// https://github.com/typst/typst/issues/180#issuecomment-1484069775
-#let format_currency(number) = {
-  let precision = 2
-  assert(precision > 0)
-  let s = str(calc.round(number, digits: precision))
-  let after_dot = s.find(regex("\..*"))
-  if after_dot == none {
-    s = s + "."
-    after_dot = "."
+// https://github.com/typst/typst/issues/180#issuecomment-1627451769
+#let format_currency(number, precision: 2, decimal_delim: ",", thousands_delim: ".") = {
+  let integer = str(calc.floor(number))
+  if precision <= 0 {
+    return integer
   }
-  for i in range(precision - after_dot.len() + 1){
-    s = s + "0"
+
+  let value = str(calc.round(number, digits: precision))
+  let from_dot = decimal_delim + if value == integer {
+    precision * "0"
+  } else {
+    let precision_diff = integer.len() + precision + decimal_delim.len() - value.len()
+    value.slice(integer.len() + 1) + precision_diff * "0"
   }
-  // fake de locale
-  s.replace(".", ",")
+
+  let cursor = 3
+  while integer.len() > cursor {
+    integer = integer.slice(0, integer.len() - cursor) + thousands_delim + integer.slice(integer.len() - cursor, integer.len())
+    cursor += thousands_delim.len() + 3
+  }
+  integer + from_dot
 }
 
 #set text(number-type: "old-style")
