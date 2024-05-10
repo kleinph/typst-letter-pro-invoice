@@ -91,47 +91,50 @@ Projektbezeichnung: #details.project
 
 #let items = details.items.enumerate().map(
   ((id, item)) => (
-    [#str(id + 1).],
+    [#str(id + 1)],
     [#item.description],
-    [#format_currency(item.price)€],
+    [#format_currency(item.price) €],
   )).flatten()
 
-#let total = details.items.map((item) => item.at("price")).sum()
+#let subtotal = details.items.map((item) => item.at("price")).sum()
+#let total = subtotal * (1.0 + details.vat)
 
 #[
   #set text(number-type: "lining")
   #gridx(
     columns: (auto, 10fr, auto),
     align: ((column, row) => if column == 1 { left } else { right }),
-    hlinex(stroke: (thickness: 0.5pt)),
+//    hlinex(stroke: (thickness: 0.5pt)),
+// --- Header ---
     [*Pos.*],
     [*Beschreibung*],
     [*Preis*],
     hlinex(),
+// --- Positionen ---
     ..items,
     hlinex(),
+// --- Netto ---
     [],
     [
       #set align(end)
-      Summe:
+      Summe netto
     ],
-    [#format_currency((1.0 - details.vat) * total)€],
-    hlinex(start: 2),
-    [],
-    [
-      #set text(number-type: "old-style")
-      #set align(end)
-      #str(details.vat * 100)% Mehrwertsteuer:
-    ],
-    [#format_currency(details.vat * total)€],
-    hlinex(start: 2),
+    [#format_currency(subtotal) €],
+// --- USt. ---
     [],
     [
       #set align(end)
-      *Gesamt:*
+      Zzgl. #str(details.vat * 100)% USt.
     ],
-    [*#format_currency(total)€*],
+    [#format_currency(details.vat * subtotal) €],
     hlinex(start: 2),
+// --- Total ---
+    [],
+    [
+      #set align(end)
+      *Gesamt*
+    ],
+    [*#format_currency(total) €*],
   )
 ]
 
