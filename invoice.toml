@@ -1,10 +1,14 @@
+# SPDX-FileCopyrightText: 2024 Philipp Klein <philipptheklein@gmail.com>
 # SPDX-FileCopyrightText: 2023 Kerstin Humm <kerstin@erictapen.name>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 invoice-nr = "2023-001"
 date = "24.05.2023"
-vat = 0.19
+vat = 0.20
+subject = "Example Invoice"
+period = "05/2023"
+project = "Typst Invoice Example"
 
 items = [
   { description = "The first service provided. The first service provided. The first service provided", price = 200 },
@@ -12,21 +16,23 @@ items = [
 ]
 
 [author]
-name = "Kerstin Humm"
-street = "Straße der Privatsphäre und Stille 1"
-zip = "54321"
-city = "Potsdam"
-tax_nr = "12345/67890"
+name = "Danny Developer"
+address = "Kodagasse 42, 1337 Developingen"
+tel = "+43 (0) 666 123456"
+email = "office@example.com"
+uid = "ATU12345678"
 
 [recipient]
 name = "Erika Mustermann"
 street = "Musterallee"
-zip = "12345"
+zip = "1234"
 city = "Musterstadt"
+co = "z.H. Buchhaltung"
+uid = "ATU42001337"
 
 [bank_account]
 name = "Todd Name"
 bank = "Deutsche Postbank AG"
-iban = "DE 5463 2168 7213 2157 98"
+iban = "DE54 6321 6872 1321 5798"
 bic = "PBNKDEFF"
 

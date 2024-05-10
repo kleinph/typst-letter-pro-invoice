@@ -3,16 +3,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#import "@preview/letter-pro:2.1.0": letter-simple
 #import "tablex.typ": gridx, hlinex
 
-#set text(lang: "de", region: "DE")
+#set text(lang: "de", region: "AT")
 
 #let details = toml("invoice.toml")
-
-#set page(
-  paper: "a4",
-  margin: (x: 20%, y: 20%, top: 20%, bottom: 20%),
-)
 
 // Typst can't format numbers yet, so we use this from here:
 // https://github.com/typst/typst/issues/180#issuecomment-1627451769
@@ -38,35 +34,60 @@
   integer + from_dot
 }
 
-#set text(number-type: "old-style")
+#show: letter-simple.with(
+  sender: (
+    name: details.author.name,
+    address: details.author.address,
+    extra: [
 
-#smallcaps[
-    *#details.author.name* •
-    #details.author.street •
-    #details.author.zip #details.author.city
-  ]
+      //UID: #details.author.uid\
+      #link(details.author.tel)[#details.author.tel]\
+      #link(details.author.email)[#details.author.email]
+    ],
+  ),
 
-#v(1em)
+  //annotations: [Einschreiben - Rückschein],
+  recipient: [
+    #details.recipient.name \
+    #details.recipient.co \
+    #details.recipient.street \
+    #details.recipient.zip #details.recipient.city \
+  ],
 
-#[
-  #set par(leading: 0.40em)
-  #set text(size: 1.2em)
-  #details.recipient.name \
-  #details.recipient.street \
-  #details.recipient.zip
-  #details.recipient.city
-]
+  information-box: pad(right: 10mm)[
+    #set text(size: 10pt)
+    #set align(end)
 
-#v(4em)
+    #v(3.5em)
 
-#[
-  #set align(right)
-  #details.author.city, #details.date
-]
+    Rechnungsnummer \
+    #details.invoice-nr
 
-#heading[
-    Rechnung \##details.invoice-nr
-  ]
+    Kunden UID-Nr. \
+    #details.recipient.uid
+  ],
+  footer: [
+    #set text(size: 8pt)
+    #details.author.name\
+    #details.author.address\
+    #details.author.tel | #details.author.email\
+    UID: #details.author.uid | IBAN: #details.bank_account.iban
+  ],
+  margin: (
+    bottom: 30mm,
+  ),
+  date: details.date,
+  subject: "Rechnung",
+)
+
+Für
+
+== #details.subject
+
+
+Leistungszeitraum: #details.period \
+Projektbezeichnung: #details.project
+
 
 #let items = details.items.enumerate().map(
   ((id, item)) => (
@@ -114,33 +135,17 @@
   )
 ]
 
-#v(3em)
+#v(1em)
 
-#[
-  #set text(size: 0.8em)
-  Vielen Dank für die Zusammenarbeit. Die Rechnungssumme überweisen Sie bitte innerhalb von 14 Tagen ohne Abzug auf mein unten genanntes Konto unter Nennung der
-  Rechnungsnummer.
+Zahlbar gemäß Vereinbarung auf Konto:
 
-  Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.
+#pad(left: 5mm)[
+  #details.bank_account.bank\
+  #details.bank_account.iban\
+  #details.bank_account.bic
 ]
 
 #v(1em)
 
-#[
-  #set par(leading: 0.40em)
-  #set text(number-type: "lining")
-  Kontoinhaberin: #details.bank_account.name \
-  Kreditinstitut: #details.bank_account.bank \
-  IBAN: *#details.bank_account.iban* \
-  BIC: #details.bank_account.bic
-]
+Danke für Ihren Auftrag!
 
-Steuernummer: #details.author.tax_nr
-
-#v(1em)
-
-Mit freundlichen Grüßen,
-
-#v(1em)
-
-#details.author.name
