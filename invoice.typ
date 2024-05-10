@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #import "@preview/letter-pro:2.1.0": letter-simple
-#import "tablex.typ": gridx, hlinex
 
 #set text(lang: "de", region: "AT")
 
@@ -101,18 +100,19 @@ Projektbezeichnung: #details.project
 
 #[
   #set text(number-type: "lining")
-  #gridx(
+  #table(
     columns: (auto, 10fr, auto),
     align: ((column, row) => if column == 1 { left } else { right }),
-//    hlinex(stroke: (thickness: 0.5pt)),
+    stroke: none,
+//    table.hline(stroke: (thickness: 0.5pt)),
 // --- Header ---
     [*Pos.*],
     [*Beschreibung*],
     [*Preis*],
-    hlinex(),
+    table.hline(),
 // --- Positionen ---
     ..items,
-    hlinex(),
+    table.hline(),
 // --- Netto ---
     [],
     [
@@ -127,7 +127,7 @@ Projektbezeichnung: #details.project
       Zzgl. #str(details.vat * 100)% USt.
     ],
     [#format_currency(details.vat * subtotal) €],
-    hlinex(start: 2),
+    table.hline(start: 2),
 // --- Total ---
     [],
     [
