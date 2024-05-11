@@ -92,6 +92,7 @@ Projektbezeichnung: #details.project
   ((id, item)) => (
     [#str(id + 1)],
     [#item.description],
+    [#item.at("quantity", default: none)],
     [#format_currency(item.price) €],
   )).flatten()
 
@@ -101,19 +102,21 @@ Projektbezeichnung: #details.project
 #[
   #set text(number-type: "lining")
   #table(
-    columns: (auto, 10fr, auto),
+    columns: (auto, 8fr, auto, auto),
     align: ((column, row) => if column == 1 { left } else { right }),
     stroke: none,
 //    table.hline(stroke: (thickness: 0.5pt)),
 // --- Header ---
     [*Pos.*],
     [*Beschreibung*],
+    [],
     [*Preis*],
     table.hline(),
 // --- Positionen ---
     ..items,
     table.hline(),
 // --- Netto ---
+    [],
     [],
     [
       #set align(end)
@@ -122,6 +125,7 @@ Projektbezeichnung: #details.project
     [#format_currency(subtotal) €],
 // --- USt. ---
     [],
+    [],
     [
       #set align(end)
       Zzgl. #str(details.vat * 100)% USt.
@@ -129,6 +133,7 @@ Projektbezeichnung: #details.project
     [#format_currency(details.vat * subtotal) €],
     table.hline(start: 2),
 // --- Total ---
+    [],
     [],
     [
       #set align(end)
