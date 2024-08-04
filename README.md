@@ -1,4 +1,5 @@
 <!--
+SPDX-FileCopyrightText: 2024 Philipp Klein <philipptheklein@gmail.com>
 SPDX-FileCopyrightText: 2023 Kerstin Humm <kerstin@erictapen.name>
 
 SPDX-License-Identifier: GPL-3.0-or-later
@@ -8,15 +9,15 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 ![](preview.png)
 
-An template for writing invoices, which strives to be almost a copy of the [beautiful LaTex template by @mrzool](https://github.com/mrzool/invoice-boilerplate/).
+A template for writing invoices, which combines the [TOML-based invoice by @erictapen](https://github.com/erictapen/typst-invoice) with the great DIN 5008 conforming letter template [_typst-letter-pro_](https://github.com/Sematre/typst-letter-pro).
 
-The data for an individual invoice is stored in a TOML file (`invoice.toml`), so the important fields are easily identifiable and can even be produced by another program.
+As in _typst-invoce_ the data for an invoice is stored in a TOML file (`invoice.toml`), so it is easily editable and can even be produced by another program.
 
 ## Specifics
 
-The entire template strives to work for the german region and locale, which is aquired through hacks, as Typst doesn't seem to have good support for locales yet. The reason for that is just that I personally needed it like this. You'll also find some other details that only fit my specific use case, e.g. the reference to the german § 19 UStG.
+The template strives to adhere to the requirements of an Austrian B2B invoice with sales tax.
 
-So it is very likely that you have to adapt the template to your use case. PRs that make the template usable by a wider audience are welcome.
+Pull requests to fix mistakes or make template usable by a wider audience are welcome.
 
 ## Building
 
