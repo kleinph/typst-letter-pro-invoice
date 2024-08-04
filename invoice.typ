@@ -93,11 +93,19 @@ Projektbezeichnung: #details.project
     [#str(id + 1)],
     [#item.description],
     [#item.at("quantity", default: none)],
-    [#format_currency(item.price) €],
+    [€ #format_currency(item.price)],
   )).flatten()
 
 #let subtotal = details.items.map((item) => item.at("price")).sum()
+#let vatSum = details.vat * subtotal
 #let total = subtotal * (1.0 + details.vat)
+
+#let subtotaCell = ()
+#if details.items.len() > 1 {
+  subtotaCell = (
+    [], [], [Summe netto], [€ #format_currency(subtotal)],
+  )
+}
 
 #[
   #set text(number-type: "lining")
@@ -105,41 +113,19 @@ Projektbezeichnung: #details.project
     columns: (auto, 8fr, auto, auto),
     align: ((column, row) => if column == 1 { left } else { right }),
     stroke: none,
-//    table.hline(stroke: (thickness: 0.5pt)),
 // --- Header ---
-    [*Pos.*],
-    [*Beschreibung*],
-    [],
-    [*Preis*],
+    [*Pos.*], [*Beschreibung*], [], [*Preis*],
     table.hline(),
 // --- Positionen ---
     ..items,
     table.hline(),
 // --- Netto ---
-    [],
-    [],
-    [
-      #set align(end)
-      Summe netto
-    ],
-    [#format_currency(subtotal) €],
+    ..subtotaCell,
 // --- USt. ---
-    [],
-    [],
-    [
-      #set align(end)
-      Zzgl. #str(details.vat * 100)% USt.
-    ],
-    [#format_currency(details.vat * subtotal) €],
+    [], [], [Zzgl. #str(details.vat * 100)% USt.], [€ #format_currency(vatSum)],
     table.hline(start: 2),
 // --- Total ---
-    [],
-    [],
-    [
-      #set align(end)
-      *Gesamt*
-    ],
-    [*#format_currency(total) €*],
+    [], [], [*Gesamt*], [*€ #format_currency(total)*],
   )
 ]
 
