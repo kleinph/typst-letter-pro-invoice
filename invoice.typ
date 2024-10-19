@@ -9,6 +9,10 @@
 
 #let details = toml("invoice.toml")
 
+// To keep precision, decimals must be constructed with string represenations of floats.
+// See https://typst.app/docs/reference/foundations/decimal/#construction-and-casts
+#let d(value) = { decimal(str(value)) }
+
 // Typst can't format numbers yet, so we use this from here:
 // https://github.com/typst/typst/issues/180#issuecomment-1627451769
 #let format_currency(number, precision: 2, decimal_delim: ",", thousands_delim: ".") = {
@@ -96,9 +100,11 @@ Projektbezeichnung: #details.project
     [€ #format_currency(item.price)],
   )).flatten()
 
-#let subtotal = details.items.map((item) => item.at("price")).sum()
-#let vatSum = details.vat * subtotal
-#let total = subtotal * (1.0 + details.vat)
+#let vat = d(details.vat)
+
+#let subtotal = details.items.map((item) => d(item.at("price"))).sum()
+#let vatSum = vat * subtotal
+#let total = subtotal * (d(1) + vat)
 
 #let subtotaCell = ()
 #if details.items.len() > 1 {
